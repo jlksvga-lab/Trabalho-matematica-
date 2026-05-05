@@ -1,0 +1,489 @@
+<!-- SUBSTITUA seu index.html por esta versão melhorada -->
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Herói da Matemática</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:Arial, Helvetica, sans-serif;
+height:100vh;
+overflow:hidden;
+background:#000;
+}
+
+.tela{
+width:100%;
+height:100vh;
+background:
+linear-gradient(rgba(0,0,0,.35),rgba(0,0,0,.55)),
+url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1600&q=80");
+background-size:cover;
+background-position:center;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.painel{
+width:960px;
+max-width:95%;
+background:rgba(10,10,10,.72);
+padding:20px;
+border-radius:22px;
+color:#fff;
+box-shadow:0 0 25px #000;
+backdrop-filter: blur(4px);
+}
+
+h1{
+text-align:center;
+color:gold;
+font-size:38px;
+margin-bottom:15px;
+}
+
+.topo{
+display:flex;
+justify-content:space-between;
+gap:20px;
+margin-bottom:15px;
+flex-wrap:wrap;
+}
+
+.statusBox{
+flex:1;
+min-width:260px;
+}
+
+.barra{
+height:18px;
+background:#333;
+border-radius:20px;
+overflow:hidden;
+margin-top:6px;
+}
+
+.hpHeroi,.hpMonstro{
+height:100%;
+transition:.3s;
+}
+
+.hpHeroi{background:limegreen;}
+.hpMonstro{background:red;}
+
+select{
+padding:10px;
+border-radius:10px;
+font-size:16px;
+border:none;
+font-weight:bold;
+}
+
+.batalha{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin:25px 0;
+}
+
+.heroi,.monstro{
+font-size:130px;
+animation:flutuar 1.7s infinite alternate;
+}
+
+@keyframes flutuar{
+from{transform:translateY(0)}
+to{transform:translateY(-10px)}
+}
+
+.centro{
+width:340px;
+text-align:center;
+}
+
+#mensagem{
+font-size:22px;
+min-height:35px;
+margin-bottom:10px;
+}
+
+#pergunta{
+font-size:34px;
+color:#00ffff;
+min-height:45px;
+margin-bottom:10px;
+}
+
+input{
+padding:12px;
+font-size:22px;
+width:160px;
+text-align:center;
+border:none;
+border-radius:12px;
+}
+
+.botoes{
+margin-top:20px;
+text-align:center;
+}
+
+button{
+padding:12px 24px;
+font-size:18px;
+border:none;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+margin:6px;
+transition:.2s;
+}
+
+button:hover{
+transform:scale(1.05);
+}
+
+.atk{background:#27ae60;color:#fff;}
+.esp{background:#e74c3c;color:#fff;}
+.resp{background:#f1c40f;}
+#especialBtn{display:none;}
+
+.finalTela{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.88);
+display:none;
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.finalBox{
+background:#111;
+padding:35px;
+border-radius:22px;
+text-align:center;
+width:500px;
+max-width:90%;
+box-shadow:0 0 25px #000;
+}
+
+.finalBox h2{
+font-size:42px;
+margin-bottom:15px;
+}
+
+.finalBox p{
+font-size:22px;
+margin-bottom:20px;
+}
+
+.finalBox button{
+background:#3498db;
+color:white;
+}
+</style>
+</head>
+<body>
+
+<div class="tela">
+<div class="painel">
+
+<h1>⚔️ HERÓI DA MATEMÁTICA ⚔️</h1>
+
+<div class="topo">
+
+<div class="statusBox">
+❤️ Herói: <span id="vidaHeroiTxt">3</span>
+<div class="barra"><div class="hpHeroi" id="heroBar"></div></div>
+</div>
+
+<div class="statusBox">
+👹 Monstro: <span id="vidaMonstroTxt">100</span>
+<div class="barra"><div class="hpMonstro" id="monsterBar"></div></div>
+</div>
+
+<div class="statusBox">
+📚 Série:
+<select id="dificuldade">
+<option value="6">6º Ano</option>
+<option value="7">7º Ano</option>
+<option value="8">8º Ano</option>
+<option value="9">9º Ano</option>
+<option value="1m">1º Médio</option>
+<option value="2m">2º Médio</option>
+<option value="3m">3º Médio</option>
+</select>
+</div>
+
+</div>
+
+<div class="batalha">
+
+<div class="heroi">🧙‍♂️</div>
+
+<div class="centro">
+<div id="mensagem">Escolha a série e ataque!</div>
+<div id="pergunta"></div>
+<input type="number" id="resposta">
+</div>
+
+<div class="monstro">👹</div>
+
+</div>
+
+<div class="botoes">
+<button class="atk" onclick="ataqueNormal()">ATACAR</button>
+<button class="esp" id="especialBtn" onclick="ataqueEspecial()">ESPECIAL</button>
+<button class="resp" onclick="verificar()">RESPONDER</button>
+</div>
+
+</div>
+</div>
+
+<div class="finalTela" id="finalTela">
+<div class="finalBox">
+<h2 id="tituloFinal"></h2>
+<p id="textoFinal"></p>
+<button onclick="location.reload()">JOGAR NOVAMENTE</button>
+</div>
+</div>
+
+<script>
+let vidaHeroi = 3;
+let vidaMonstro = 100;
+let acertos = 0;
+let resultadoAtual = null;
+let danoAtual = 10;
+
+let tempo = 30;
+let intervaloTempo = null;
+
+function atualizarTela(){
+document.getElementById("vidaHeroiTxt").innerText = vidaHeroi;
+document.getElementById("vidaMonstroTxt").innerText = vidaMonstro;
+
+document.getElementById("heroBar").style.width = (vidaHeroi/3*100)+"%";
+document.getElementById("monsterBar").style.width = Math.max(0,vidaMonstro)+"%";
+
+document.getElementById("especialBtn").style.display =
+(acertos >= 3) ? "inline-block" : "none";
+}
+
+function iniciarTimer(){
+clearInterval(intervaloTempo);
+tempo = 30;
+document.getElementById("mensagem").innerText = `⏱️ Tempo: ${tempo}s`;
+
+intervaloTempo = setInterval(()=>{
+tempo--;
+document.getElementById("mensagem").innerText = `⏱️ Tempo: ${tempo}s`;
+
+if(tempo <= 0){
+clearInterval(intervaloTempo);
+erro();
+}
+},1000);
+}
+
+function pararTimer(){
+clearInterval(intervaloTempo);
+}
+
+function aleatorio(min,max){
+return Math.floor(Math.random()*(max-min+1))+min;
+}
+
+function ataqueNormal(){
+
+let nivel = document.getElementById("dificuldade").value;
+let pergunta = "";
+
+/* 6º ANO → operações + ordem */
+if(nivel=="6"){
+let a=aleatorio(5,50), b=aleatorio(5,50), c=aleatorio(1,10);
+
+if(Math.random()<0.5){
+resultadoAtual = a + b * c;
+pergunta = `${a} + ${b} × ${c}`;
+}else{
+resultadoAtual = (a + b) * c;
+pergunta = `(${a} + ${b}) × ${c}`;
+}
+}
+
+/* 7º ANO → multiplicação/divisão mais pesada */
+if(nivel=="7"){
+let a=aleatorio(10,30), b=aleatorio(2,12);
+
+if(Math.random()<0.5){
+resultadoAtual = a * b;
+pergunta = `${a} × ${b}`;
+}else{
+let r=aleatorio(2,12);
+let n=a*r;
+resultadoAtual = r;
+pergunta = `${n} ÷ ${a}`;
+}
+}
+
+/* 8º ANO → equações simples */
+if(nivel=="8"){
+let x=aleatorio(1,20);
+let a=aleatorio(2,10);
+
+resultadoAtual = x;
+pergunta = `${a}x = ${a*x}`;
+}
+
+/* 9º ANO → equações com soma */
+if(nivel=="9"){
+let x=aleatorio(-10,10);
+let a=aleatorio(2,10);
+let b=aleatorio(1,20);
+
+resultadoAtual = x;
+pergunta = `${a}x + ${b} = ${a*x + b}`;
+}
+
+/* 1º MÉDIO → equação mais completa */
+if(nivel=="1m"){
+let x=aleatorio(-10,10);
+let a=aleatorio(1,5);
+let b=aleatorio(1,10);
+
+resultadoAtual = x;
+pergunta = `${a}(x + ${b}) = ${a*(x+b)}`;
+}
+
+/* 2º MÉDIO → potência + raiz */
+if(nivel=="2m"){
+let a=aleatorio(2,12);
+
+if(Math.random()<0.5){
+resultadoAtual = a*a;
+pergunta = `${a}²`;
+}else{
+let q = a*a;
+resultadoAtual = a;
+pergunta = `√${q}`;
+}
+}
+
+/* 3º MÉDIO → equação mais difícil */
+if(nivel=="3m"){
+let x=aleatorio(-10,10);
+let a=aleatorio(1,5);
+let b=aleatorio(1,10);
+let c=aleatorio(1,10);
+
+resultadoAtual = x;
+pergunta = `${a}x + ${b} = ${c}x + ${a*x + b - c*x}`;
+}
+
+document.getElementById("pergunta").innerText = pergunta;
+document.getElementById("mensagem").innerText = "Resolva!";
+danoAtual = 10;
+
+iniciarTimer();
+}
+
+
+function ataqueEspecial(){
+let a=aleatorio(2,10), b=aleatorio(2,5);
+resultadoAtual = Math.pow(a,b);
+document.getElementById("pergunta").innerText = `${a}^${b}`;
+document.getElementById("mensagem").innerText = "🔥 ESPECIAL!";
+danoAtual = 25;
+iniciarTimer();
+}
+
+function efeitoDano(){
+document.body.style.transform = "translateX(10px)";
+setTimeout(()=>{document.body.style.transform = "translateX(-10px)"},50);
+setTimeout(()=>{document.body.style.transform = "translateX(0)"},100);
+}
+
+function efeitoAcerto(){
+document.body.style.background = "#033";
+setTimeout(()=>{document.body.style.background = "#000"},100);
+}
+
+function erro(){
+vidaHeroi--;
+document.getElementById("mensagem").innerText = "⏱️ TEMPO ESGOTADO!";
+efeitoDano();
+finalizarRodada();
+}
+
+function verificar(){
+
+if(resultadoAtual===null) return;
+
+pararTimer();
+
+let resposta = Number(document.getElementById("resposta").value);
+
+if(resposta === resultadoAtual){
+vidaMonstro -= danoAtual;
+acertos++;
+document.getElementById("mensagem").innerText = "⚔️ ACERTOU!";
+efeitoAcerto();
+}else{
+vidaHeroi--;
+document.getElementById("mensagem").innerText = "💥 ERROU!";
+efeitoDano();
+}
+
+if(danoAtual==25){
+acertos=0;
+}
+
+finalizarRodada();
+}
+
+function finalizarRodada(){
+document.getElementById("resposta").value="";
+document.getElementById("pergunta").innerText="";
+resultadoAtual=null;
+
+if(vidaHeroi<=0){
+fimJogo(false);
+return;
+}
+
+if(vidaMonstro<=0){
+fimJogo(true);
+return;
+}
+
+atualizarTela();
+}
+
+function fimJogo(vitoria){
+
+pararTimer();
+
+document.getElementById("finalTela").style.display="flex";
+
+if(vitoria){
+document.getElementById("tituloFinal").innerText="🏆 VITÓRIA!";
+document.getElementById("textoFinal").innerText=
+"Você derrotou o monstro!";
+}else{
+document.getElementById("tituloFinal").innerText="💀 DERROTA!";
+document.getElementById("textoFinal").innerText=
+"O monstro venceu...";
+}
+}
+
+atualizarTela();
+</script>
+
+</body>
+</html>
